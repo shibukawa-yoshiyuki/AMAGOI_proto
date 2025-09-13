@@ -149,7 +149,7 @@ void EnviroSensor::getObservations( unsigned long int* temp_raw, unsigned long i
 //
 // Method   :   correctTemperature
 // Abstruct :   気温観測データを補正する
-// Argument :   signed long int adc_T
+// Argument :   signed long int adc_T   : [I]補正前データ(気温)
 // Return   :   signed long int
 //              補正後の観測データ(気温)
 //              ※整数値なので実値の100倍になっていることに注意
@@ -170,7 +170,7 @@ signed long int EnviroSensor::correctTemperature( signed long int adc_T ) {
 //
 // Method   :   correctPressure
 // Abstruct :   気圧観測データを補正する
-// Argument :   signed long int adc_P
+// Argument :   signed long int adc_P   : [I]補正前データ(気圧)
 // Return   :   unsigned long int
 //              補正後の観測データ(気圧)
 //              ※整数値なので実値の100倍になっていることに注意
@@ -209,7 +209,7 @@ unsigned long int EnviroSensor::correctPressure( signed long int adc_P ) {
 //
 // Method   :   correctHumidity
 // Abstruct :   湿度観測データを補正する
-// Argument :   signed long int adc_P
+// Argument :   signed long int adc_P   : [I]補正前データ(湿度)
 // Return   :   unsigned long int
 //              補正後の観測データ(湿度)
 //              ※整数値なので実値の1024倍になっていることに注意
@@ -231,9 +231,9 @@ unsigned long int EnviroSensor::correctHumidity( signed long int adc_H ) {
 //
 // Method   :   performObservations
 // Abstruct :   観測値を取得して補正値を返す
-// Argument :   double* temp_act    補正後の気温
-//          :   double* press_act   補正後の気圧
-//          :   double* hum_act     補正後の湿度
+// Argument :   double* temp_act    : [O]補正後の気温
+//          :   double* press_act   : [O]補正後の気圧
+//          :   double* hum_act     : [O]補正後の湿度
 // Return   :   n/a
 void EnviroSensor::performObservations( double* temp_act, double* press_act, double* hum_act ) {
     // レジスタからの読み出し値
