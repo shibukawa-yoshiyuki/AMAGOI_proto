@@ -1,8 +1,8 @@
 //
-// Filename :	GroveLcdRgbBacklight.cpp
+// Filename :   GroveLcdRgbBacklight.cpp
 // Abstruct :   Method for GroveLcdRgbBacklight class
-// Author   :   shibukawa.yoshiyuki@atit.jp
-// Update   :   2025/09/16 New Creation
+// Author   :   application_division@atit.jp
+// Update   :   2025/09/16  New Creation
 #include <Arduino.h>
 #include "GroveLcdRgbBacklight.hpp"
 
