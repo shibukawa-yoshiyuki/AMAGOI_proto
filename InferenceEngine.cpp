@@ -1,11 +1,11 @@
 //
-// Filename :   GroveLcdRgbBacklight.cpp
+// Filename :   InferenceEngine.cpp
 // Abstruct :   Method for InferenceEngine class
 // Author   :   application_division@atit.jp
-// Update   :   2025/09/18	New Creation
+// Update   :   2025/09/19	New Creation
 #include "InferenceEngine.hpp"
 
-namespace AMAGOI {
+using namespace AMAGOI;
 //
 // Method   :   InferenceEngine
 // Abstruct :   コンストラクタ
@@ -33,7 +33,7 @@ bool InferenceEngine::updateObservations( double x ) {
 	double xhat = x + 1.0;
 
 	// フィルタ更新実行
-	calcEstimate( &xhat, y, &(this->G), &(this->P) );
+	calcPredictedValue( &xhat, y, &(this->G), &(this->P) );
 	this->observCount++;
 
 	if( this->observCount == 1 && this->estValCnt == 0 ) {
@@ -53,7 +53,7 @@ bool InferenceEngine::updateObservations( double x ) {
 		this->estVal[this->estValCnt - 1] = x;
 		
 		// 推定値を算出
-		calcInferredValue( xhat, this->estimatedValueCount );
+		calcInferredValue( xhat, this->estValCnt );
 		
 		// 最小二乗法にて傾きを算出
 		updatePrediction( this->estVal, this->estValCnt + EST_REC_CNT_MAX );
@@ -81,14 +81,13 @@ void InferenceEngine::calcInferredValue( double xhat, int dataHead ) {
 
 	for( int i = 1; i <= EST_CALC_CNT; i++ ) {
 		double yhat = pow( xhat, 3.0 );
-		calcEstimate( &xhat, yhat, &Ghat, &Phat );
+		calcPredictedValue( &xhat, yhat, &Ghat, &Phat );
 		if( i % 60 == 0 ) {
 			// 記憶域に格納
-			this->estimatedValue[dataHead];
+			this->estVal[dataHead];
 			dataHead++;
 		}
 	}
-	this->calcInferredValue = xhat;
 
 	return;
 }
@@ -103,15 +102,15 @@ void InferenceEngine::calcInferredValue( double xhat, int dataHead ) {
 // Return   :   n/a
 void InferenceEngine::calcPredictedValue( double *xhat, double y, double *G, double *P ) {
 	// 事前推定値の算出
-    double xhatM = xhat + 3.0 * cos( xhat / 10.0 );
-    double PM = ( 1.0 - 3.0 / 10.0 * sin( xhat / 10 )) * P * ( 1.0 - 3.0 / 10.0 * sin( xhat / 10 )) + ( 1 ) * this->Q * ( 1 );
+    double xhatM = *xhat + 3.0 * cos( *xhat / 10.0 );
+    double PM = ( 1.0 - 3.0 / 10.0 * sin( *xhat / 10 )) * (*P) * ( 1.0 - 3.0 / 10.0 * sin( *xhat / 10 )) + ( 1 ) * this->Q * ( 1 );
 
 	// カルマンゲインの更新
     *G = PM * ( 3.0 * pow( xhatM, 2.0 ))  / ( 3.0 * pow( xhatM, 2.0 ) ) * PM * ( 3.0 * pow( xhatM, 2.0 ) ) + this->R;
 
 	// 事後推定値の算出
-	*xhat = xhatM + G * ( y - pow( xhatM, 3.0 ));
-    *P = ( 1.0 ) - G * ( 3.0 * pow( xhatM, 2.0 )) * PM;
+	*xhat = xhatM + (*G) * ( y - pow( xhatM, 3.0 ));
+    *P = ( 1.0 ) - (*G) * ( 3.0 * pow( xhatM, 2.0 )) * PM;
 
 	return;
 }
@@ -131,7 +130,7 @@ void InferenceEngine::updatePrediction( double* y, int cnt ) {
 	// 傾きを算出
 	// note : 横軸は時間(ミリ秒単位)
 	for( int i = 0; i < cnt; i++) {
-		sum_xx += ( (double)OBS_INTERVAL * (double)i ) * ( (double)OBS_INTERVAL * (double)i ) 
+		sum_xx += ( (double)OBS_INTERVAL * (double)i ) * ( (double)OBS_INTERVAL * (double)i );
 		sum_xy += ( (double)OBS_INTERVAL * (double)i ) * y[i];
 		sum_x  += ( (double)OBS_INTERVAL * (double)i );
 		sum_y  += y[i];
@@ -153,5 +152,4 @@ void InferenceEngine::arraySlide( double* array ) {
 	}
 	array[12] = 0.0;
 	return;
-}
 }

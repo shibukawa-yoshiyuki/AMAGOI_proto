@@ -4,8 +4,8 @@
 // Filename :   InferenceEngine.hpp
 // Abstruct :   Class definition for inference engine
 // Author   :   application_division@atit.jp
-// Update   :   2025/09/18	New Creation
-#include <math.h>
+// Update   :   2025/09/19	New Creation
+#include <cmath>
 
 namespace AMAGOI {
 //
@@ -29,20 +29,20 @@ private:
     double Q;                       // システムノイズ
     double R;                       // 観測ノイズ
     double inclination;             // 傾き
-    double estVal[EST_ARRAY_MAX];   // 観測値および推定値記憶域
+    double estVal[25];   // 観測値および推定値記憶域
     double inferredValue;           // 最新の推定値
     int    observCount;             // 観測回数カウンタ
-    int    estdValCnt;              // 観測値データ数
+    int    estValCnt;              // 観測値データ数
 private:
     // Definition of method
 private:
-    void calcInferredValue( double );
+    void calcInferredValue( double, int );
     void calcPredictedValue( double*, double, double*, double* );
     void updatePrediction( double*, int );
-    void arraySlide( double[] );
+    void arraySlide( double* );
 public:
     InferenceEngine( double, double );
-    int updateObservations( double );
+    bool updateObservations( double );
 };
 }
 #endif // #ifndef INFERENCE_ENGINE_H
