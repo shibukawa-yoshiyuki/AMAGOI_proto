@@ -3,8 +3,8 @@
 // Abstruct :   Method for InferenceEngine class
 // Author   :   application_division@atit.jp
 // Update   :   2025/09/20	New Creation
-#include <cstdlib>
-#include <ctime>
+#include <stdlib.h>
+#include <time.h>
 #include "InferenceEngine.hpp"
 
 using namespace AMAGOI;

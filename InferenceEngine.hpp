@@ -5,10 +5,7 @@
 // Abstruct :   Class definition for inference engine
 // Author   :   application_division@atit.jp
 // Update   :   2025/09/20	New Creation
-#include <cmath>
-#if true
-#include <cstdint>
-#endif
+#include <math.h>
 
 namespace AMAGOI {
 //
